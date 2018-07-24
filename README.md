@@ -1,12 +1,12 @@
 # MiniVitaTV
 
-This plugin allows you to connect up to 4 DS3/DS4 controllers to your PS Vita, and play local multiplayer games, by using the exact same driver as on the PS TV. Yes, the PS Vita screen is rather small, but I think it's kinda cute to play on it with friends while travelling or so.
-Note that this plugin is still in beta stage and more features will be added, like the ability to assign controller ports, etc. Basically every controller feature that the normal PS TV has will be included.
+This plugin allows you to connect up to 4 DS3/DS4 controllers to your PS Vita, and play local multiplayer games, by using the exact same driver as on the PS TV. Yes, the PS Vita screen is rather small, but I think it's kinda cute to play on it with friends while travelling or so.  
+Note that this plugin is still in beta stage and more features will be added, like the ability to assign controller ports, etc. Basically every controller feature that the normal PS TV has will be included.  
 **Only official DS3/DS4 controllers are currently supported!**
 
 ## Installation
 
-1. Download [minivitatv.skprx](https://github.com/TheOfficialFloW/ds3patch/releases/download/v0.1/minivitatv.skprx) and [ds3.skprx](https://github.com/TheOfficialFloW/ds3patch/releases/download/v0.1/ds3.skprx), and copy them to `ux0:tai`.
+1. Download [minivitatv.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.1/minivitatv.skprx) and [ds3.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.1/ds3.skprx), and copy them to `ux0:tai`.
 
 2. Add these lines to taiHEN config.txt at `ux0:tai/config.txt`:
 
