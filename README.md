@@ -12,7 +12,7 @@ Note that this plugin is still in beta stage and the known issues will be fixed 
 
   - No lockscreen
   - Quick menu: Power functions available
-  - Quick menu: Ability to assign controller port, enable/disable vibration and power off controller
+  - Quick menu: Ability to see controller battery status, assign controller port, enable/disable vibration and power off controller
 
   A downside of this is however that the battery bar disappears and the statusbar changes to transparent which you may not like, but welp. Also I did not test if faking the device as PS TV also restricts applications, let me know.
 
