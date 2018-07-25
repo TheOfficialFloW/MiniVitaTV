@@ -19,10 +19,10 @@
 #include <psp2/kernel/modulemgr.h>
 #include <taihen.h>
 
-static SceUID hooks[2];
-
 static tai_hook_ref_t scePafMiscIsVitaTVRef;
 static tai_hook_ref_t scePafMiscIsMultiControllerSupportedRef;
+
+static SceUID hooks[2];
 
 static int scePafMiscIsVitaTVPatched() {
   TAI_CONTINUE(int, scePafMiscIsVitaTVRef);
