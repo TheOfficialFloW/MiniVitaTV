@@ -33,7 +33,7 @@ Note that this plugin is still in beta stage and the known issues will be fixed 
 
 3. Reboot your device and relaunch HENkaku. Note that you cannot use your physical buttons anymore, however you can still use your touchscreen to pair the controllers.
 
-Note that you can also only install `minivitatv.suprx` without the other two modules to get rid of the lockscreen and have the power functions.
+Note that you can also only install `minivitatv.suprx` without the other two modules to get rid of the lockscreen and have the power functions. Or alternatively only `minivitatv.skprx` and `ds3.skprx` so you don't have the downsides described above.
 
 ## Pairing a DS4 controller
 
