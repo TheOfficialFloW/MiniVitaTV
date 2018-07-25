@@ -1,12 +1,24 @@
 # MiniVitaTV
 
-This plugin allows you to connect up to 4 DS3/DS4 controllers to your PS Vita, and play local multiplayer games, by using the exact same driver as on the PS TV. Yes, the PS Vita screen is rather small, but I think it's kinda cute to play on it with friends while travelling or so.  
-Note that this plugin is still in beta stage and more features will be added, like the ability to assign controller ports, etc. Basically every controller feature that the normal PS TV has will be included.  
+This plugin fakes your device as a PS TV and allows you to connect up to 4 DS3/DS4 controllers to your PS Vita, and play local multiplayer games, by using the exact same driver as on the PS TV. Yes, the PS Vita screen is rather small, but I think it's kinda cute to play on it with friends while travelling or so.  
+Note that this plugin is still in beta stage and the known issues will be fixed when I find time.
 **Only official DS3/DS4 controllers are currently supported!**
+
+## Changelog
+
+#### Changelog v0.2
+
+- Added `minivitatv.suprx` which adds patches to SceShell to make the device think it is a PS TV. This brings us some neat features:
+
+  - No lockscreen
+  - Quick menu: Power functions available
+  - Quick menu: Ability to assign controller port, enable/disable vibration and power off controller
+
+  A downside of this is however that the statusbar changes to transparent which you may not like, but welp. Also I did not test if faking the device as PS TV also restricts applications, let me know.
 
 ## Installation
 
-1. Download [minivitatv.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.1/minivitatv.skprx) and [ds3.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.1/ds3.skprx), and copy them to `ux0:tai`.
+1. Download [minivitatv.suprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.2/minivitatv.suprx), [minivitatv.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.2/minivitatv.skprx) and [ds3.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.2/ds3.skprx), and copy them to `ux0:tai`.
 
 2. Add these lines to taiHEN config.txt at `ux0:tai/config.txt`:
 
@@ -14,9 +26,14 @@ Note that this plugin is still in beta stage and more features will be added, li
    *KERNEL
    ux0:tai/minivitatv.skprx
    ux0:tai/ds3.skprx
+   
+   *main
+   ux0:tai/minivitatv.suprx
    ```
 
 3. Reboot your device and relaunch HENkaku. Note that you cannot use your physical buttons anymore, however you can still use your touchscreen to pair the controllers.
+
+Note that you can also only install `minivitatv.suprx` without the other two modules to get rid of the lockscreen and have the power functions.
 
 ## Pairing a DS4 controller
 

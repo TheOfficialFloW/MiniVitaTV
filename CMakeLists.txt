@@ -14,11 +14,21 @@ include("${VITASDK}/share/vita.cmake" REQUIRED)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -O3 -nostdlib")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
 
-add_executable(minivitatv
-  main.c
+add_executable(shell
+  shell.c
 )
 
-target_link_libraries(minivitatv
+target_link_libraries(shell
+  taiHEN_stub
+)
+
+vita_create_self(minivitatv.suprx shell CONFIG exports.yml UNSAFE)
+
+add_executable(kernel
+  kernel.c
+)
+
+target_link_libraries(kernel
   SceIofilemgrForDriver_stub
   SceSysclibForDriver_stub
   SceThreadmgrForDriver_stub
@@ -28,9 +38,4 @@ target_link_libraries(minivitatv
   SceProcessmgrForDriver_stub
 )
 
-vita_create_self(minivitatv.skprx minivitatv CONFIG exports.yml UNSAFE)
-
-add_custom_target(copy
-  COMMAND cp minivitatv.skprx I:/tai/minivitatv.skprx
-  DEPENDS minivitatv.skprx
-)
+vita_create_self(minivitatv.skprx kernel CONFIG exports.yml UNSAFE)
