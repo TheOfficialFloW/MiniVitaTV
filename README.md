@@ -1,7 +1,7 @@
 # MiniVitaTV
 
 This plugin fakes your device as a PS TV and allows you to connect up to 4 DS3/DS4 controllers to your PS Vita, and play local multiplayer games, by using the exact same driver as on the PS TV. Yes, the PS Vita screen is rather small, but I think it's kinda cute to play on it with friends while travelling or so.  
-Note that this plugin is still in beta stage and the known issues will be fixed when I find time.
+Note that this plugin is still in beta stage and the known issues will be fixed when I find time.  
 **Only official DS3/DS4 controllers are currently supported!**
 
 ## Changelog
