@@ -4,9 +4,12 @@ This plugin fakes your device as a PS TV and allows you to connect up to 4 DS3/D
 Note that this plugin is still in beta stage and the known issues will be fixed when I find time.  
 **Only official DS3/DS4 controllers are currently supported!**
 
+## Changelog beta 2
+- Added support for L2/R2 buttons and rumble.
+
 ## Installation
 
-1. Download [minivitatv.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.1/minivitatv.skprx) and [ds3.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.1/ds3.skprx), and copy them to `ux0:tai`.
+1. Download [minivitatv.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.2/minivitatv.skprx) and [ds3.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.2/ds3.skprx), and copy them to `ux0:tai`.
 
 2. Add these lines to taiHEN config.txt at `ux0:tai/config.txt`:
 
