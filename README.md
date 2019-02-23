@@ -4,6 +4,9 @@ This plugin fakes your device as a PS TV and allows you to connect up to 4 DS3/D
 Note that this plugin is still in beta stage and the known issues will be fixed when I find time.  
 **Only official DS3/DS4 controllers are currently supported!**
 
+## Changelog beta 3
+- Fixed compatibility with h-encore 2.0.
+
 ## Changelog beta 2
 - Added support for L2/R2 buttons and rumble.
 

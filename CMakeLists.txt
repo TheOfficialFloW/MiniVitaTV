@@ -35,6 +35,7 @@ target_link_libraries(kernel
   taihenForKernel_stub
   taihenModuleUtils_stub
   SceSysmemForDriver_stub
+  SceSysrootForDriver_stub
   SceProcessmgrForDriver_stub
 )
 

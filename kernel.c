@@ -35,6 +35,7 @@ typedef struct {
   SceUID ctrlext_eventid;
 } ctrl_events_t;
 
+int ksceKernelSysrootGetShellPid(void);
 int module_get_export_func(SceUID pid, const char *modname, uint32_t libnid, uint32_t funcnid, uintptr_t *func);
 int module_get_offset(SceUID pid, SceUID modid, int segidx, size_t offset, uintptr_t *addr);
 
@@ -80,39 +81,6 @@ static int patch_bt() {
   hooks[0] = taiInjectDataForKernel(KERNEL_PID, tai_info.modid, 0, 0xD820, &nop_opcode, sizeof(uint16_t));
 
   return 0;
-}
-
-static SceUID get_shell_pid() {
-  SceUID shell_pid = -1;
-  int res;
-
-  int (* _sceAppMgrGetIdByName)(SceUID *pid, const char *name) = NULL;
-
-  tai_module_info_t tai_info;
-  tai_info.size = sizeof(tai_module_info_t);
-  res = taiGetModuleInfoForKernel(KERNEL_PID, "SceAppMgr", &tai_info);
-  if (res < 0)
-    return shell_pid;
-
-  switch (tai_info.module_nid) {
-    case 0xDBB29DB7: // 3.60 retail
-      module_get_offset(KERNEL_PID, tai_info.modid, 0, 0x32325, (uintptr_t *)&_sceAppMgrGetIdByName);
-      break;
-
-    case 0x1C9879D6: // 3.65 retail
-      module_get_offset(KERNEL_PID, tai_info.modid, 0, 0x3230D, (uintptr_t *)&_sceAppMgrGetIdByName);
-      break;
-
-    case 0x54E2E984: // 3.67 retail
-    case 0xC3C538DE: // 3.68 retail
-      module_get_offset(KERNEL_PID, tai_info.modid, 0, 0x3231D, (uintptr_t *)&_sceAppMgrGetIdByName);
-      break;
-  }
-
-  if (_sceAppMgrGetIdByName)
-    _sceAppMgrGetIdByName(&shell_pid, "NPXS19999");
-
-  return shell_pid;
 }
 
 static int patch_ctrl(SceUID shell_pid) {
@@ -201,7 +169,7 @@ int module_start(SceSize args, void *argp) {
   if (res < 0)
     return SCE_KERNEL_START_FAILED;
 
-  res = patch_ctrl(get_shell_pid());
+  res = patch_ctrl(ksceKernelSysrootGetShellPid());
   if (res < 0)
     return SCE_KERNEL_START_FAILED;
 
