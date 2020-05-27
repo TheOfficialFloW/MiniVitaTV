@@ -1,6 +1,7 @@
 /*
   MiniVitaTV
   Copyright (C) 2018, TheFloW
+  Copyright (C) 2020, Asakura Reiko
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,12 +29,26 @@
 
 #define MAX_CONTROLLERS 5
 
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#define MAX(x, y) ((x) < (y) ? (y) : (x))
+
 typedef struct {
   int unk_00;
   int unk_04;
   SceUID ctrl_eventid;
   SceUID ctrlext_eventid;
 } ctrl_events_t;
+
+typedef struct SceCtrlDataInternal {
+  SceUInt64 timeStamp;
+  SceUInt32 buttons;
+  SceUChar8 lx;
+  SceUChar8 ly;
+  SceUChar8 rx;
+  SceUChar8 ry;
+  SceUChar8 rest[0x18];
+  // size is 0x28
+} SceCtrlDataInternal;
 
 int ksceKernelSysrootGetShellPid(void);
 int module_get_export_func(SceUID pid, const char *modname, uint32_t libnid, uint32_t funcnid, uintptr_t *func);
@@ -42,8 +57,11 @@ int module_get_offset(SceUID pid, SceUID modid, int segidx, size_t offset, uintp
 static int (* _ksceKernelGetModuleInfo)(SceUID pid, SceUID modid, SceKernelModuleInfo *info) = NULL;
 
 static tai_hook_ref_t ksceSysrootCheckModelCapabilityRef;
+static tai_hook_ref_t set_input_ref;
 
-static SceUID hooks[2];
+static SceUID hooks[3];
+
+static int *ctrl_data;
 
 static int ksceSysrootCheckModelCapabilityPatched(int capability) {
   int res = TAI_CONTINUE(int, ksceSysrootCheckModelCapabilityRef, capability);
@@ -54,6 +72,17 @@ static int ksceSysrootCheckModelCapabilityPatched(int capability) {
   }
 
   return res;
+}
+
+static int set_input_patched(int port, SceCtrlDataInternal *in, int flag) {
+  if (port == 0 && flag == 1) {
+    ctrl_data[0x0] |= in->buttons;
+    ctrl_data[0x1] = MIN(127, MAX(-128, ctrl_data[0x1] + (int)in->lx - 256)) + 128;
+    ctrl_data[0x4] = MIN(127, MAX(-128, ctrl_data[0x4] + (int)in->ly - 256)) + 128;
+    ctrl_data[0x7] = MIN(127, MAX(-128, ctrl_data[0x7] + (int)in->rx - 256)) + 128;
+    ctrl_data[0xA] = MIN(127, MAX(-128, ctrl_data[0xA] + (int)in->ry - 256)) + 128;
+  }
+  return TAI_CONTINUE(int, set_input_ref, port, in, flag);
 }
 
 static int patch_bt() {
@@ -143,6 +172,12 @@ static int patch_ctrl(SceUID shell_pid) {
   if (shell_pid != -1)
     alloc_process_heap(shell_pid);
 
+  // SceCtrl internal control data buffer
+  module_get_offset(KERNEL_PID, tai_info.modid, 1, 0xA84, (uintptr_t*)&ctrl_data);
+
+  // Hook function to merge Vita controls with port 0
+  hooks[2] = taiHookFunctionOffsetForKernel(KERNEL_PID, &set_input_ref, tai_info.modid, 0, 0x107C, 1, set_input_patched);
+
   return 0;
 }
 
@@ -177,6 +212,8 @@ int module_start(SceSize args, void *argp) {
 }
 
 int module_stop(SceSize args, void *argp) {
+  if (hooks[2] >= 0)
+    taiHookReleaseForKernel(hooks[2], set_input_ref);
   if (hooks[1] >= 0)
     taiHookReleaseForKernel(hooks[1], ksceSysrootCheckModelCapabilityRef);
   if (hooks[0] >= 0)

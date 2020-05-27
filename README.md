@@ -51,9 +51,9 @@ If you're using enso you should boot with L trigger hold to skip plugins in case
 
 ## Known issues
 
-- Cannot use physical buttons yet
 - Pressing the touchpad on DS4 crashes Adrenaline
 
 ## Credits
 
 Thanks to xerpi for his work on ds3vita/ds4vita and the pairing guide.
+Thanks to cuevavirus for working Vita buttons.
