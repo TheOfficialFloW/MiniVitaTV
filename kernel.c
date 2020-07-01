@@ -29,8 +29,7 @@
 
 #define MAX_CONTROLLERS 5
 
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
-#define MAX(x, y) ((x) < (y) ? (y) : (x))
+#define CLAMP_ANALOG(n) ((n) < -128 ? -128 : (127 < (n) ? 127 : (n)))
 
 typedef struct {
   int unk_00;
@@ -42,12 +41,20 @@ typedef struct {
 typedef struct SceCtrlDataInternal {
   SceUInt64 timeStamp;
   SceUInt32 buttons;
-  SceUChar8 lx;
-  SceUChar8 ly;
-  SceUChar8 rx;
-  SceUChar8 ry;
-  SceUChar8 rest[0x18];
-  // size is 0x28
+  SceUInt8 lx;
+  SceUInt8 ly;
+  SceUInt8 rx;
+  SceUInt8 ry;
+  SceUInt8 lx_wide;
+  SceUInt8 ly_wide;
+  SceUInt8 rx_wide;
+  SceUInt8 ry_wide;
+  SceUInt8 unk_14[0xC];
+  SceUInt8 lx_3;
+  SceUInt8 ly_3;
+  SceUInt8 rx_3;
+  SceUInt8 ry_3;
+  SceUInt8 unk_24[0x4];
 } SceCtrlDataInternal;
 
 int ksceKernelSysrootGetShellPid(void);
@@ -77,10 +84,21 @@ static int ksceSysrootCheckModelCapabilityPatched(int capability) {
 static int set_input_patched(int port, SceCtrlDataInternal *in, int flag) {
   if (port == 0 && flag == 1) {
     ctrl_data[0x0] |= in->buttons;
-    ctrl_data[0x1] = MIN(127, MAX(-128, ctrl_data[0x1] + (int)in->lx - 256)) + 128;
-    ctrl_data[0x4] = MIN(127, MAX(-128, ctrl_data[0x4] + (int)in->ly - 256)) + 128;
-    ctrl_data[0x7] = MIN(127, MAX(-128, ctrl_data[0x7] + (int)in->rx - 256)) + 128;
-    ctrl_data[0xA] = MIN(127, MAX(-128, ctrl_data[0xA] + (int)in->ry - 256)) + 128;
+
+    ctrl_data[0x1] = CLAMP_ANALOG(ctrl_data[0x1] + (int)in->lx - 256) + 128;
+    ctrl_data[0x4] = CLAMP_ANALOG(ctrl_data[0x4] + (int)in->ly - 256) + 128;
+    ctrl_data[0x7] = CLAMP_ANALOG(ctrl_data[0x7] + (int)in->rx - 256) + 128;
+    ctrl_data[0xA] = CLAMP_ANALOG(ctrl_data[0xA] + (int)in->ry - 256) + 128;
+
+    ctrl_data[0x2] = CLAMP_ANALOG(ctrl_data[0x2] + (int)in->lx_wide - 256) + 128;
+    ctrl_data[0x5] = CLAMP_ANALOG(ctrl_data[0x5] + (int)in->ly_wide - 256) + 128;
+    ctrl_data[0x8] = CLAMP_ANALOG(ctrl_data[0x8] + (int)in->rx_wide - 256) + 128;
+    ctrl_data[0xB] = CLAMP_ANALOG(ctrl_data[0xB] + (int)in->ry_wide - 256) + 128;
+
+    ctrl_data[0x3] = CLAMP_ANALOG(ctrl_data[0x3] + (int)in->lx_3 - 256) + 128;
+    ctrl_data[0x6] = CLAMP_ANALOG(ctrl_data[0x6] + (int)in->ly_3 - 256) + 128;
+    ctrl_data[0x9] = CLAMP_ANALOG(ctrl_data[0x9] + (int)in->rx_3 - 256) + 128;
+    ctrl_data[0xC] = CLAMP_ANALOG(ctrl_data[0xC] + (int)in->ry_3 - 256) + 128;
   }
   return TAI_CONTINUE(int, set_input_ref, port, in, flag);
 }

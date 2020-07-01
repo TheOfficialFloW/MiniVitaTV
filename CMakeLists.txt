@@ -19,7 +19,7 @@ add_executable(shell
 )
 
 target_link_libraries(shell
-  taiHEN_stub
+  taihen_stub
 )
 
 vita_create_self(minivitatv.suprx shell CONFIG exports.yml UNSAFE)
