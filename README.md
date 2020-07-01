@@ -25,7 +25,7 @@ Note that this plugin is still in beta stage and the known issues will be fixed 
    ux0:tai/ds3.skprx
    ```
 
-3. Reboot your device and relaunch HENkaku. Note that you cannot use your physical buttons anymore, however you can still use your touchscreen to pair the controllers.
+3. Reboot your device and relaunch HENkaku.
 
 If you're using enso you should boot with L trigger hold to skip plugins in case you want to remove this plugin. Remember it's a beta.
 
@@ -59,4 +59,5 @@ If you're using enso you should boot with L trigger hold to skip plugins in case
 ## Credits
 
 Thanks to xerpi for his work on ds3vita/ds4vita and the pairing guide.
+
 Thanks to cuevavirus for working Vita buttons.
