@@ -62,6 +62,8 @@ int module_get_export_func(SceUID pid, const char *modname, uint32_t libnid, uin
 int module_get_offset(SceUID pid, SceUID modid, int segidx, size_t offset, uintptr_t *addr);
 
 static int (* _ksceKernelGetModuleInfo)(SceUID pid, SceUID modid, SceKernelModuleInfo *info) = NULL;
+static int (* _ksceKernelMountBootfs)(const char *bootImagePath) = NULL;
+static int (* _ksceKernelUmountBootfs)(void) = NULL;
 
 static tai_hook_ref_t ksceSysrootCheckModelCapabilityRef;
 static tai_hook_ref_t set_input_ref;
@@ -199,14 +201,40 @@ static int patch_ctrl(SceUID shell_pid) {
   return 0;
 }
 
-static int get_module_info_func() {
+static int get_export_funcs() {
   int res;
 
   res = module_get_export_func(KERNEL_PID, "SceKernelModulemgr", 0xC445FA63,
                                0xD269F915, (uintptr_t *)&_ksceKernelGetModuleInfo);
-  if (res < 0)
+  if (res == 0) {
+    module_get_export_func(KERNEL_PID, "SceKernelModulemgr", 0xC445FA63,
+                           0x01360661, (uintptr_t *)&_ksceKernelMountBootfs);
+    module_get_export_func(KERNEL_PID, "SceKernelModulemgr", 0xC445FA63,
+                           0x9C838A6B, (uintptr_t *)&_ksceKernelUmountBootfs);
+  } else {
     res = module_get_export_func(KERNEL_PID, "SceKernelModulemgr", 0x92C9FFC2,
                                  0xDAA90093, (uintptr_t *)&_ksceKernelGetModuleInfo);
+    if (res == 0) {
+      module_get_export_func(KERNEL_PID, "SceKernelModulemgr", 0x92C9FFC2,
+                             0x185FF1BC, (uintptr_t *)&_ksceKernelMountBootfs);
+      module_get_export_func(KERNEL_PID, "SceKernelModulemgr", 0x92C9FFC2,
+                             0xBD61AD4D, (uintptr_t *)&_ksceKernelUmountBootfs);
+    }
+  }
+
+  return res;
+}
+
+static int load_sceds3(void) {
+  int res;
+
+  res = _ksceKernelMountBootfs("os0:kd/bootimage.skprx");
+  if (res < 0)
+    return res;
+
+  res = ksceKernelLoadStartModule("os0:kd/ds3.skprx", 0, NULL, 0x800, NULL, NULL);
+  _ksceKernelUmountBootfs();
+
   return res;
 }
 
@@ -214,7 +242,7 @@ void _start() __attribute__ ((weak, alias("module_start")));
 int module_start(SceSize args, void *argp) {
   int res;
 
-  res = get_module_info_func();
+  res = get_export_funcs();
   if (res < 0)
     return SCE_KERNEL_START_FAILED;
 
@@ -225,6 +253,15 @@ int module_start(SceSize args, void *argp) {
   res = patch_ctrl(ksceKernelSysrootGetShellPid());
   if (res < 0)
     return SCE_KERNEL_START_FAILED;
+
+  res = load_sceds3();
+  if (res < 0) {
+    if (hooks[2] >= 0)
+      taiHookReleaseForKernel(hooks[2], set_input_ref);
+    if (hooks[1] >= 0)
+      taiHookReleaseForKernel(hooks[1], ksceSysrootCheckModelCapabilityRef);
+    return SCE_KERNEL_START_FAILED;
+  }
 
   return SCE_KERNEL_START_SUCCESS;
 }

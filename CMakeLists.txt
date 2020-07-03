@@ -37,6 +37,7 @@ target_link_libraries(kernel
   SceSysmemForDriver_stub
   SceSysrootForDriver_stub
   SceProcessmgrForDriver_stub
+  SceModulemgrForDriver_stub
 )
 
 vita_create_self(minivitatv.skprx kernel CONFIG exports.yml UNSAFE)
