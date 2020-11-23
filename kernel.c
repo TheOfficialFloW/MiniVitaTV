@@ -28,8 +28,11 @@
 #include <taihen.h>
 
 #define MAX_CONTROLLERS 5
+#define DEADZONE 20
 
 #define CLAMP_ANALOG(n) ((n) < -128 ? -128 : (127 < (n) ? 127 : (n)))
+#define DEADZONE_ANALOG(a) ((a) > 127 - DEADZONE && (a) < 127 + DEADZONE ? 127 : (a))
+#define MERGE_ANALOG(a1, a2) ((a1) = CLAMP_ANALOG(DEADZONE_ANALOG(a1) + DEADZONE_ANALOG((int)(a2)) - 255) + 128)
 
 typedef struct {
   int unk_00;
@@ -85,20 +88,21 @@ static int set_input_patched(int port, SceCtrlDataInternal *in, int flag) {
   if (port == 0 && flag == 1) {
     ctrl_data[0x0] |= in->buttons;
 
-    ctrl_data[0x1] = CLAMP_ANALOG(ctrl_data[0x1] + (int)in->lx - 256) + 128;
-    ctrl_data[0x4] = CLAMP_ANALOG(ctrl_data[0x4] + (int)in->ly - 256) + 128;
-    ctrl_data[0x7] = CLAMP_ANALOG(ctrl_data[0x7] + (int)in->rx - 256) + 128;
-    ctrl_data[0xA] = CLAMP_ANALOG(ctrl_data[0xA] + (int)in->ry - 256) + 128;
+    MERGE_ANALOG(ctrl_data[0x1], in->lx);
+    MERGE_ANALOG(ctrl_data[0x4], in->ly);
+    MERGE_ANALOG(ctrl_data[0x7], in->rx);
+    MERGE_ANALOG(ctrl_data[0xA], in->ry);
 
-    ctrl_data[0x2] = CLAMP_ANALOG(ctrl_data[0x2] + (int)in->lx_wide - 256) + 128;
-    ctrl_data[0x5] = CLAMP_ANALOG(ctrl_data[0x5] + (int)in->ly_wide - 256) + 128;
-    ctrl_data[0x8] = CLAMP_ANALOG(ctrl_data[0x8] + (int)in->rx_wide - 256) + 128;
-    ctrl_data[0xB] = CLAMP_ANALOG(ctrl_data[0xB] + (int)in->ry_wide - 256) + 128;
+    MERGE_ANALOG(ctrl_data[0x2], in->lx_wide);
+    MERGE_ANALOG(ctrl_data[0x5], in->ly_wide);
+    MERGE_ANALOG(ctrl_data[0x8], in->rx_wide);
+    MERGE_ANALOG(ctrl_data[0xB], in->ry_wide);
 
-    ctrl_data[0x3] = CLAMP_ANALOG(ctrl_data[0x3] + (int)in->lx_3 - 256) + 128;
-    ctrl_data[0x6] = CLAMP_ANALOG(ctrl_data[0x6] + (int)in->ly_3 - 256) + 128;
-    ctrl_data[0x9] = CLAMP_ANALOG(ctrl_data[0x9] + (int)in->rx_3 - 256) + 128;
-    ctrl_data[0xC] = CLAMP_ANALOG(ctrl_data[0xC] + (int)in->ry_3 - 256) + 128;
+    MERGE_ANALOG(ctrl_data[0x3], in->lx_3);
+    MERGE_ANALOG(ctrl_data[0x6], in->lx_3);
+    MERGE_ANALOG(ctrl_data[0x9], in->lx_3);
+    MERGE_ANALOG(ctrl_data[0xC], in->lx_3);
+
   }
   return TAI_CONTINUE(int, set_input_ref, port, in, flag);
 }
