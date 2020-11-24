@@ -99,9 +99,9 @@ static int set_input_patched(int port, SceCtrlDataInternal *in, int flag) {
     MERGE_ANALOG(ctrl_data[0xB], in->ry_wide);
 
     MERGE_ANALOG(ctrl_data[0x3], in->lx_3);
-    MERGE_ANALOG(ctrl_data[0x6], in->lx_3);
-    MERGE_ANALOG(ctrl_data[0x9], in->lx_3);
-    MERGE_ANALOG(ctrl_data[0xC], in->lx_3);
+    MERGE_ANALOG(ctrl_data[0x6], in->ly_3);
+    MERGE_ANALOG(ctrl_data[0x9], in->rx_3);
+    MERGE_ANALOG(ctrl_data[0xC], in->ry_3);
 
   }
   return TAI_CONTINUE(int, set_input_ref, port, in, flag);
