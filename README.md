@@ -4,6 +4,9 @@ This plugin fakes your device as a PS TV and allows you to connect up to 4 DS3/D
 Note that this plugin is still in beta stage and the known issues will be fixed when I find time.  
 **Only official DS3/DS4 controllers are currently supported!**
 
+## Changelog beta 5
+- Fixed vita analog controls. Thanks to cuevavirus and MERLev.
+
 ## Changelog beta 4
 - Fixed issue where physical buttons could not be used. Thanks to cuevavirus.
 
