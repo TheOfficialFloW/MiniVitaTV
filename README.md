@@ -18,7 +18,7 @@ Note that this plugin is still in beta stage and the known issues will be fixed 
 
 ## Installation
 
-1. Download [minivitatv.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.4/minivitatv.skprx) and [ds3.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.4/ds3.skprx), and copy them to `ux0:tai`.
+1. Download [minivitatv.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.5/minivitatv.skprx) and [ds3.skprx](https://github.com/TheOfficialFloW/MiniVitaTV/releases/download/v0.5/ds3.skprx), and copy them to `ux0:tai`.
 
 2. Add these lines to taiHEN config.txt at `ux0:tai/config.txt`:
 
